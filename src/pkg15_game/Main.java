@@ -8,38 +8,37 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-/**
- *
- * @author Adam
- */
-public class Main extends Application {
-    
+public class Main extends Application
+{
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage)
+    {
         Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
+        
+        btn.setText("Säg 'Hej Världen'");
+        btn.setOnAction(new EventHandler<ActionEvent>()
+        {
             @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
+            public void handle(ActionEvent event)
+            {
+                System.out.println("Hej Världen!");
             }
         });
         
         StackPane root = new StackPane();
+        
         root.getChildren().add(btn);
         
         Scene scene = new Scene(root, 300, 250);
         
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("Hej Världen!");
         primaryStage.setScene(scene);
+        
         primaryStage.show();
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         launch(args);
     }
     
