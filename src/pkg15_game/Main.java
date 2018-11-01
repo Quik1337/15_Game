@@ -3,6 +3,7 @@ package pkg15_game;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.application.Application;
 import javafx.scene.Node;
@@ -100,6 +101,35 @@ public class Main extends Application
         //klickas)
         Button newGameButton = new Button("New Game");
         newGameButton.setPrefSize(400, 50);
+        
+        newGameButton.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override public void handle(ActionEvent e)
+            {
+                //Lista som kommer hålla nummer 1-16
+                List<String> nums = new ArrayList();
+                
+                //Lägger in numren 1-16 i listan som stringar
+                for(int i = 1; i <= 16; i++)
+                {
+                    String stringNum = Integer.toString(i);
+                    nums.add(stringNum);
+                }
+                
+                //Byter ut numret "16" mot "" (blank)
+                nums.set(15, "");
+                
+                //Blandar listan med numren 1-16 och den blanka
+                Collections.shuffle(nums);
+
+                //Sätter in numren i listan som text i knapparna som finns i
+                //knapp-listan.
+                for (int i = 0; i <= 15; i++)
+                {
+                    btns.get(i).setText(nums.get(i));
+                }
+            }
+        });
         
         //Placerar gridet av knappar i toppen av BorderPanet och nytt spel-
         //knappen i botten.
