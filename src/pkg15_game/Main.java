@@ -1,8 +1,11 @@
 package pkg15_game;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -36,18 +39,62 @@ public class Main extends Application
             for (int c = 0; c <= 3; c++)
             {
                 stringNum = Integer.toString(intNum);
-                Button orderedButton = new Button(stringNum);
-                orderedButton.setPrefSize(100, 100);
-                grid.add(orderedButton, c, r);
-                btns.add(orderedButton);
+                Button btn = new Button(stringNum);
+                btn.setPrefSize(100, 100);
+                grid.add(btn, c, r);
+                btns.add(btn);
                 intNum++;
             }
         }
         
         //Gör knapp 16 blank
-        Button blankButton = new Button();
-        blankButton = btns.get(15);
-        blankButton.setText("");
+        btns.get(15).setText("");
+        
+        //Lägger till eventhanterare till alla knappar i knapp-listan som
+        //hanterar om in knapp i gridet klickas på.
+        for (Button btn : btns)
+        {
+            btn.setOnAction(new EventHandler<ActionEvent>()
+            {
+                @Override public void handle(ActionEvent e)
+                { 
+                    //Tar fram koordinater för den klickade knappen
+                    int c = GridPane.getColumnIndex(btn);
+                    int r = GridPane.getRowIndex(btn);
+                    
+                    for (Node node : btns)
+                    {
+                        //Kollar de fyra noder som ligger ovanför, under, höger
+                        //och vänster om den klickade nodens koordinater.
+                        if(GridPane.getColumnIndex(node) == c-1 &&
+                           GridPane.getRowIndex(node) == r ||
+                                
+                           GridPane.getColumnIndex(node) == c+1 &&
+                           GridPane.getRowIndex(node) == r ||
+                                
+                           GridPane.getColumnIndex(node) == c &&
+                           GridPane.getRowIndex(node) == r-1 ||
+                                
+                           GridPane.getColumnIndex(node) == c &&
+                           GridPane.getRowIndex(node) == r+1)
+                        {
+                            //Gör om node till en knapp
+                            Button nodeBtn = (Button) node;
+                            
+                            //Om någon av de fyra knapparna runt den klickade
+                            //knappen har tom text så sätt in texten från den
+                            //klickade knappen in i den tomma knappen och ta
+                            //sedan bort texten i den klickade knappen.
+                            if(nodeBtn.getText() == "")
+                            {
+                                nodeBtn.setText(btn.getText());
+                                btn.setText("");   
+                            }
+                        }
+                    }
+                }
+            });
+        }
         
         //Skapar en knapp för nytt spel (blandar om numren i knapparna när den
         //klickas)
