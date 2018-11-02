@@ -15,9 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Main extends Application 
-{    
-    //Hej
-    
+{
     @Override
     public void start(Stage primaryStage)
     {
