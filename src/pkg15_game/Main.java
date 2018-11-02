@@ -1,19 +1,20 @@
 package pkg15_game;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class Main extends Application
+public class Main extends Application 
 {    
     @Override
     public void start(Stage primaryStage)
@@ -55,44 +56,69 @@ public class Main extends Application
         //hanterar om in knapp i gridet klickas på.
         for (Button btn : btns)
         {
-            btn.setOnAction(new EventHandler<ActionEvent>()
+            btn.setOnAction((ActionEvent e) ->
             {
-                @Override public void handle(ActionEvent e)
-                { 
-                    //Tar fram koordinater för den klickade knappen
-                    int c = GridPane.getColumnIndex(btn);
-                    int r = GridPane.getRowIndex(btn);
-                    
-                    for (Node node : btns)
+                //Tar fram koordinater för den klickade knappen
+                int c = GridPane.getColumnIndex(btn);
+                int r = GridPane.getRowIndex(btn);
+                
+                for (Node node : btns)
+                {
+                    //Kollar de fyra noder som ligger ovanför, under, höger
+                    //och vänster om den klickade nodens koordinater.
+                    if(GridPane.getColumnIndex(node) == c-1 &&
+                       GridPane.getRowIndex(node) == r ||
+
+                       GridPane.getColumnIndex(node) == c+1 &&
+                       GridPane.getRowIndex(node) == r ||
+
+                       GridPane.getColumnIndex(node) == c &&
+                       GridPane.getRowIndex(node) == r-1 ||
+
+                       GridPane.getColumnIndex(node) == c &&
+                       GridPane.getRowIndex(node) == r+1)
                     {
-                        //Kollar de fyra noder som ligger ovanför, under, höger
-                        //och vänster om den klickade nodens koordinater.
-                        if(GridPane.getColumnIndex(node) == c-1 &&
-                           GridPane.getRowIndex(node) == r ||
-                                
-                           GridPane.getColumnIndex(node) == c+1 &&
-                           GridPane.getRowIndex(node) == r ||
-                                
-                           GridPane.getColumnIndex(node) == c &&
-                           GridPane.getRowIndex(node) == r-1 ||
-                                
-                           GridPane.getColumnIndex(node) == c &&
-                           GridPane.getRowIndex(node) == r+1)
+                        //Gör om node till en knapp
+                        Button nodeBtn = (Button) node;
+                        
+                        //Om någon av de fyra knapparna runt den klickade
+                        //knappen har tom text så sätt in texten från den
+                        //klickade knappen in i den tomma knappen och ta
+                        //sedan bort texten i den klickade knappen.
+                        if(nodeBtn.getText() == "")
                         {
-                            //Gör om node till en knapp
-                            Button nodeBtn = (Button) node;
-                            
-                            //Om någon av de fyra knapparna runt den klickade
-                            //knappen har tom text så sätt in texten från den
-                            //klickade knappen in i den tomma knappen och ta
-                            //sedan bort texten i den klickade knappen.
-                            if(nodeBtn.getText() == "")
-                            {
-                                nodeBtn.setText(btn.getText());
-                                btn.setText("");   
-                            }
-                        }
+                            nodeBtn.setText(btn.getText());
+                            btn.setText("");
+                        }   
                     }
+                }
+                
+                //Kontroll-Lista, Knapp-Text-Lista, testar matchning mellan dessa
+                
+                List<String> ctrlList = new ArrayList();
+                
+                for (int i = 1; i <= 16; i++)
+                {
+                    String s = Integer.toString(i);
+                    ctrlList.add(s);
+                }
+                
+                ctrlList.set(15, "");
+                
+                List<String> btnsTextList = new ArrayList();
+                
+                for (int i = 0; i <= 15; i++)
+                {
+                    String s = btns.get(i).getText();
+                    btnsTextList.add(s);
+                }
+                
+                if (ctrlList.equals(btnsTextList))
+                {
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    
+                    alert.setHeaderText("You Won!");
+                    alert.showAndWait();
                 }
             });
         }
@@ -102,32 +128,24 @@ public class Main extends Application
         Button newGameButton = new Button("New Game");
         newGameButton.setPrefSize(400, 50);
         
-        newGameButton.setOnAction(new EventHandler<ActionEvent>()
+        newGameButton.setOnAction((ActionEvent e) ->
         {
-            @Override public void handle(ActionEvent e)
+            //Lista som kommer hålla nummer 1-16
+            List<String> nums = new ArrayList();
+            //Lägger in numren 1-16 i listan som stringar
+            for (int i = 1; i <= 16; i++) {
+                String stringNum1 = Integer.toString(i);
+                nums.add(stringNum1);
+            }
+            //Byter ut numret "16" mot "" (blank)
+            nums.set(15, "");
+            //Blandar listan med numren 1-16 och den blanka
+            Collections.shuffle(nums);
+            //Sätter in numren i listan som text i knapparna som finns i
+            //knapp-listan.
+            for (int i = 0; i <= 15; i++)
             {
-                //Lista som kommer hålla nummer 1-16
-                List<String> nums = new ArrayList();
-                
-                //Lägger in numren 1-16 i listan som stringar
-                for(int i = 1; i <= 16; i++)
-                {
-                    String stringNum = Integer.toString(i);
-                    nums.add(stringNum);
-                }
-                
-                //Byter ut numret "16" mot "" (blank)
-                nums.set(15, "");
-                
-                //Blandar listan med numren 1-16 och den blanka
-                Collections.shuffle(nums);
-
-                //Sätter in numren i listan som text i knapparna som finns i
-                //knapp-listan.
-                for (int i = 0; i <= 15; i++)
-                {
-                    btns.get(i).setText(nums.get(i));
-                }
+                btns.get(i).setText(nums.get(i));
             }
         });
         
